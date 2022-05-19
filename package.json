@@ -1,5 +1,5 @@
 {
-  "name": "mantine-next-template",
+  "name": "universalis-docs",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -14,16 +14,15 @@
     "jest:watch": "jest --watch",
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
-    "test": "npm run prettier:check && npm run lint && npm run typecheck && npm run jest",
+    "test": "yarn prettier:check && yarn lint && yarn typecheck && yarn jest",
     "storybook": "start-storybook -p 7001",
     "storybook:build": "build-storybook"
   },
   "dependencies": {
     "@mantine/core": "4.2.2",
-    "@mantine/dates": "4.2.2",
+    "@mantine/form": "4.2.2",
     "@mantine/hooks": "4.2.2",
     "@mantine/next": "4.2.2",
-    "@mantine/notifications": "4.2.2",
     "@mantine/prism": "4.2.2",
     "@modulz/radix-icons": "^4.0.0",
     "@next/bundle-analyzer": "^12.1.4",
