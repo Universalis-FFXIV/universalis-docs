@@ -26,7 +26,9 @@ export function RestDocumentation() {
         Object.keys(schema.paths[path])
           .map((method) => ({ method, endpoint: schema.paths[path][method] }))
           .map(({ method, endpoint }) => (
-            <RestEndpoint path={path} method={method} endpoint={endpoint} />
+            <div key={path + method}>
+              <RestEndpoint path={path} method={method} endpoint={endpoint} />
+            </div>
           ))
       )}
     </Container>
