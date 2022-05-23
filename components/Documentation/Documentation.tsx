@@ -1,23 +1,95 @@
 import {
   Title,
   Text,
-  Anchor,
   AppShell,
   Header,
   Navbar,
   Divider,
   UnstyledButton,
   Group,
+  Container,
+  Space,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import useStyles from './Documentation.styles';
+
+const schemaUrl = 'https://localhost:5001/docs/swagger/v1/swagger.json';
+
+type SwaggerType =
+  | { $ref: string }
+  | {
+      type: string;
+      description?: string;
+      format?: string;
+      default?: string;
+      properties?: {
+        [key: string]: SwaggerType;
+      };
+      additionalProperties?: boolean;
+      nullable?: boolean;
+    };
+
+interface SwaggerSchema {
+  openapi: string;
+  info: {
+    title: string;
+    description: string;
+    license: {
+      name: string;
+      url: string;
+    };
+    version: string;
+  };
+  paths: {
+    [key: string]: {
+      [key: string]: {
+        tags: string[];
+        summary: string;
+        parameters: {
+          name: string;
+          in: string;
+          description: string;
+          required: boolean;
+          schema: SwaggerType;
+        }[];
+        responses: {
+          [key: number]: {
+            description: string;
+            content: {
+              [key: string]: {
+                schema: SwaggerType;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  components: {
+    schemas: {
+      [key: string]: SwaggerType;
+    };
+  };
+}
+
+function tagToId(tag: string) {
+  return tag.toLowerCase().replace(/\s+/g, '-');
+}
 
 export function Documentation() {
   const { classes } = useStyles();
 
-  // TODO: make this actual CSS lol
-  const [bgc, setBgc] = useState('rgba(0.0, 0.0, 1.0, 0.0)');
+  const [schema, setSchema] = useState<SwaggerSchema>();
+  useEffect(() => {
+    fetch(schemaUrl)
+      .then((res) => res.json())
+      .then(setSchema);
+  }, []);
+
+  if (schema == null) {
+    return <div />;
+  }
 
   return (
     <AppShell
@@ -25,19 +97,11 @@ export function Documentation() {
       navbar={
         <Navbar width={{ base: 300 }} p="xs">
           <Navbar.Section>
-            <Title>Universalis</Title>
+            <Title className={classes.title}>{schema.info.title}</Title>
           </Navbar.Section>
           <Divider my="sm" />
           <Navbar.Section grow mt="md">
-            <UnstyledButton
-              style={{ width: '100%', backgroundColor: bgc }}
-              onMouseOver={() => {
-                setBgc('rgba(0, 0, 255, 0.2)');
-              }}
-              onMouseLeave={() => {
-                setBgc('rgba(0, 0, 0, 0.0)');
-              }}
-            >
+            <UnstyledButton>
               <Group>
                 <Text>REST API</Text>
               </Group>
@@ -58,20 +122,31 @@ export function Documentation() {
         },
       })}
     >
-      <Title className={classes.title} align="center" mt={100}>
-        Welcome to{' '}
-        <Text inherit variant="gradient" component="span">
-          Mantine
-        </Text>
-      </Title>
-      <Text color="dimmed" align="center" size="lg" sx={{ maxWidth: 580 }} mx="auto" mt="xl">
-        This starter Next.js project includes a minimal setup for server side rendering, if you want
-        to learn more on Mantine + Next.js integration follow{' '}
-        <Anchor href="https://mantine.dev/theming/next/" size="lg">
-          this guide
-        </Anchor>
-        . To get started edit index.tsx file.
-      </Text>
+      <Container>
+        <Title id="rest-api">{schema.info.title} REST API</Title>
+        <Text dangerouslySetInnerHTML={{ __html: schema.info.description }} />
+        <Space h="xl" />
+        {Object.keys(schema.paths).flatMap((path) =>
+          Object.keys(schema.paths[path])
+            .map((method) => ({ method, endpoint: schema.paths[path][method] }))
+            .map(({ method, endpoint }) => (
+              <div>
+                <Space h="lg" />
+                <Title className={classes.endpointTitle} id={tagToId(endpoint.tags[0])}>
+                  {endpoint.tags[0]}
+                </Title>
+                <Divider />
+                <div>
+                  <div>
+                    <span className={classes.endpointMethod}>{method}</span> -{' '}
+                    <span className={classes.endpointPath}>{path}</span>
+                  </div>
+                  <Text>{endpoint.summary}</Text>
+                </div>
+              </div>
+            ))
+        )}
+      </Container>
     </AppShell>
   );
 }
