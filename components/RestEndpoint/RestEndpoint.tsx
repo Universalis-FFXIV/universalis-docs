@@ -18,10 +18,14 @@ export function RestEndpoint({
 }) {
   const { classes } = useStyles();
 
+  const parameters = endpoint.parameters ?? [];
+
   const form = useForm({
-    initialValues: {
-      test: '',
-    },
+    initialValues: parameters.reduce<{ [key: string]: string }>((agg, next) => {
+      const aggNext = agg;
+      aggNext[next.name] = next.schema.type != null ? next.schema.default ?? '' : '';
+      return aggNext;
+    }, {}),
   });
 
   return (
@@ -39,36 +43,25 @@ export function RestEndpoint({
         <Text>{endpoint.summary}</Text>
         <Container sx={{ maxWidth: 700 }} mt="md">
           <form onSubmit={form.onSubmit((values) => console.log(values))}>
-            {(() => {
-              if (endpoint.parameters != null) {
-                return endpoint.parameters.map((param) => (
-                  <div>
-                    <TextInput
-                      size="md"
-                      mt="sm"
-                      label={<span className={classes.parameterName}>{param.name}</span>}
-                      required={param.required ?? false}
-                      defaultValue={
-                        param.schema.type != null ? param.schema.default ?? '' : undefined
-                      }
-                      {...form.getInputProps('test')}
-                    />
-                    <Text size="md">
-                      <code>
-                        {param.schema.type != null ? param.schema.type : param.schema.$ref}
-                      </code>{' '}
-                      <em className={classes.parameterType}>({param.in})</em> {param.description}
-                    </Text>
-                  </div>
-                ));
-              }
-
-              return <div />;
-            })()}
-            <Group position="right" mt="md">
-              <Button type="submit">Execute</Button>
-            </Group>
+            {parameters.map((param) => (
+              <div key={path + method + param.name}>
+                <TextInput
+                  size="md"
+                  mt="sm"
+                  label={<span className={classes.parameterName}>{param.name}</span>}
+                  required={param.required ?? false}
+                  {...form.getInputProps('test')}
+                />
+                <Text size="md">
+                  <code>{param.schema.type != null ? param.schema.type : param.schema.$ref}</code>{' '}
+                  <em className={classes.parameterType}>({param.in})</em> {param.description}
+                </Text>
+              </div>
+            ))}
           </form>
+          <Group position="right" mt="md">
+            <Button type="submit">Execute</Button>
+          </Group>
         </Container>
       </div>
     </div>
