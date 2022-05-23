@@ -1,5 +1,5 @@
 export type SwaggerType =
-  | { $ref: string }
+  | { type: null | undefined; $ref: string }
   | {
       type: string;
       description?: string;
@@ -15,7 +15,7 @@ export type SwaggerType =
 export interface SwaggerEndpoint {
   tags: string[];
   summary: string;
-  parameters: {
+  parameters?: {
     name: string;
     in: string;
     description: string;

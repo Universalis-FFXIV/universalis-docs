@@ -14,4 +14,10 @@ export default createStyles((theme) => ({
   path: {
     fontWeight: 600,
   },
+  parameterName: {
+    fontWeight: 600,
+  },
+  parameterType: {
+    color: 'grey',
+  },
 }));

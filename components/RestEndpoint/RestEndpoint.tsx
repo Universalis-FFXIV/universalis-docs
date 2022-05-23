@@ -21,7 +21,6 @@ export function RestEndpoint({
   const form = useForm({
     initialValues: {
       test: '',
-      test2: '',
     },
   });
 
@@ -38,12 +37,31 @@ export function RestEndpoint({
           <span className={classes.path}>{path}</span>
         </div>
         <Text>{endpoint.summary}</Text>
-        <Container sx={{ maxWidth: 580 }} mt="md">
+        <Container sx={{ maxWidth: 700 }} mt="md">
           <form onSubmit={form.onSubmit((values) => console.log(values))}>
-            <TextInput size="md" mt="sm" label="Test" {...form.getInputProps('test')} />
-            <Text size="md">Some description</Text>
-            <TextInput size="md" mt="sm" label="Test2" {...form.getInputProps('test2')} />
-            <Text size="md">Some description</Text>
+            {(() => {
+              if (endpoint.parameters != null) {
+                return endpoint.parameters.map((param) => (
+                  <div>
+                    <TextInput
+                      size="md"
+                      mt="sm"
+                      label={<span className={classes.parameterName}>{param.name}</span>}
+                      required={param.required ?? false}
+                      {...form.getInputProps('test')}
+                    />
+                    <Text size="md">
+                      <code>
+                        {param.schema.type != null ? param.schema.type : param.schema.$ref}
+                      </code>{' '}
+                      <em className={classes.parameterType}>({param.in})</em> {param.description}
+                    </Text>
+                  </div>
+                ));
+              }
+
+              return <div />;
+            })()}
             <Group position="right" mt="md">
               <Button type="submit">Execute</Button>
             </Group>
