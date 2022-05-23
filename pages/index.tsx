@@ -1,9 +1,9 @@
-import { Documentation } from '../components/Documentation/Documentation';
+import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
 
 export default function HomePage() {
   return (
     <>
-      <Documentation />
+      <RestDocumentation />
     </>
   );
 }
