@@ -5,9 +5,7 @@ export type SwaggerType =
       description?: string;
       format?: string;
       default?: string;
-      properties?: {
-        [key: string]: SwaggerType;
-      };
+      properties?: Record<string, SwaggerType>;
       additionalProperties?: boolean;
       nullable?: boolean;
     };
@@ -22,16 +20,18 @@ export interface SwaggerEndpoint {
     required: boolean;
     schema: SwaggerType;
   }[];
-  responses: {
-    [key: number]: {
+  responses: Record<
+    number,
+    {
       description: string;
-      content: {
-        [key: string]: {
+      content: Record<
+        string,
+        {
           schema: SwaggerType;
-        };
-      };
-    };
-  };
+        }
+      >;
+    }
+  >;
 }
 
 export interface SwaggerSchema {
@@ -45,14 +45,8 @@ export interface SwaggerSchema {
     };
     version: string;
   };
-  paths: {
-    [path: string]: {
-      [method: string]: SwaggerEndpoint;
-    };
-  };
+  paths: Record<string, Record<string, SwaggerEndpoint>>;
   components: {
-    schemas: {
-      [schema: string]: SwaggerType;
-    };
+    schemas: Record<string, SwaggerType>;
   };
 }
