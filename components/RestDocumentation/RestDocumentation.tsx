@@ -1,12 +1,9 @@
 import { Title, Text, Container, Space, Input, Group, SimpleGrid } from '@mantine/core';
 import { ChevronDownIcon } from '@modulz/radix-icons';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { getSchemaUrl } from '../../data/api/universalis';
 import { SwaggerSchema } from '../../data/swagger/types';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
-
-function getSchemaUrl(version: string) {
-  return `https://universalis.app/docs/swagger/${version}/swagger.json`;
-}
 
 export function RestDocumentation() {
   const [schemaVersion, setSchemaVersion] = useState<string>('v1');
