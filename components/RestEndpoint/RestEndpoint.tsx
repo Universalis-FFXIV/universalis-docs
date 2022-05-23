@@ -22,10 +22,10 @@ function executeRequest(
   method: string,
   path: string,
   values: Record<string, string>,
-  parameterTypes: Record<string, string>
+  parametersIn: Record<string, string>
 ): Promise<any> {
-  const pathValues = getParametersOfType(values, parameterTypes, 'path');
-  const queryValues = getParametersOfType(values, parameterTypes, 'query');
+  const pathValues = getParametersOfType(values, parametersIn, 'path');
+  const queryValues = getParametersOfType(values, parametersIn, 'query');
 
   const injectedPath = Object.keys(pathValues).reduce(
     (agg, k) => agg.replace(`{${k}}`, pathValues[k]),
@@ -49,9 +49,9 @@ export function RestEndpoint({
   const { classes } = useStyles();
 
   const parameters = endpoint.parameters ?? [];
-  const parameterTypes = parameters
+  const parametersIn = parameters
     .filter((param) => param.schema.type != null)
-    .map((param) => ({ name: param.name, type: param.schema.type ?? '' }))
+    .map((param) => ({ name: param.name, type: param.in }))
     .reduce<Record<string, string>>((agg, next) => {
       const aggNext = agg;
       aggNext[next.name] = next.type;
@@ -82,7 +82,7 @@ export function RestEndpoint({
         <Container sx={{ maxWidth: 700 }} mt="md">
           <form
             onSubmit={form.onSubmit((values) =>
-              executeRequest(method, path, values, parameterTypes).then(console.log)
+              executeRequest(method, path, values, parametersIn).then(console.log)
             )}
           >
             {parameters.map((param) => (
@@ -92,7 +92,7 @@ export function RestEndpoint({
                   mt="sm"
                   label={<span className={classes.parameterName}>{param.name}</span>}
                   required={param.required ?? false}
-                  {...form.getInputProps('test')}
+                  {...form.getInputProps(param.name)}
                 />
                 <Text size="md">
                   <code>{param.schema.type != null ? param.schema.type : param.schema.$ref}</code>{' '}
@@ -100,10 +100,10 @@ export function RestEndpoint({
                 </Text>
               </div>
             ))}
+            <Group position="right" mt="md">
+              <Button type="submit">Execute</Button>
+            </Group>
           </form>
-          <Group position="right" mt="md">
-            <Button type="submit">Execute</Button>
-          </Group>
         </Container>
       </div>
     </div>

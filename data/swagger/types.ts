@@ -17,7 +17,7 @@ export interface SwaggerEndpoint {
     name: string;
     in: string;
     description: string;
-    required: boolean;
+    required?: boolean;
     schema: SwaggerType;
   }[];
   responses: Record<

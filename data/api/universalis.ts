@@ -5,6 +5,7 @@ export async function request(method: string, path: string, query?: URLSearchPar
   if (query != null) {
     url += `?${query.toString()}`;
   }
+
   console.log(`Making ${method} request to ${url}`);
   return fetch(url, { method }).then((res) => res.json());
 }
