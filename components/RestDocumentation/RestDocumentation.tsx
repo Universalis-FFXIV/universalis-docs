@@ -5,7 +5,7 @@ import { SwaggerSchema } from '../../data/swagger/types';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
 
 function getSchemaUrl(version: string) {
-  return `https://localhost:5001/docs/swagger/${version}/swagger.json`;
+  return `https://universalis.app/docs/swagger/${version}/swagger.json`;
 }
 
 export function RestDocumentation() {
