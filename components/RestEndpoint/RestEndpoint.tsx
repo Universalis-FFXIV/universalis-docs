@@ -48,6 +48,9 @@ export function RestEndpoint({
                       mt="sm"
                       label={<span className={classes.parameterName}>{param.name}</span>}
                       required={param.required ?? false}
+                      defaultValue={
+                        param.schema.type != null ? param.schema.default ?? '' : undefined
+                      }
                       {...form.getInputProps('test')}
                     />
                     <Text size="md">
