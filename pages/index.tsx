@@ -1,4 +1,4 @@
-import { AppShell, Navbar, Title, Divider, Header, Button } from '@mantine/core';
+import { AppShell, Navbar, Title, Divider, Header, Button, SimpleGrid, Group } from '@mantine/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
@@ -34,8 +34,12 @@ export default function HomePage() {
       }
       header={
         <Header height={60} p="xs">
-          <div />
-          <ColorSchemeToggle />
+          <SimpleGrid cols={2}>
+            <div />
+            <Group position="right">
+              <ColorSchemeToggle />
+            </Group>
+          </SimpleGrid>
         </Header>
       }
       styles={(theme) => ({
