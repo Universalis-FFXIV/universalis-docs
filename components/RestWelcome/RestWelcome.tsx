@@ -1,6 +1,6 @@
 import { Anchor, Code, Space, Text } from '@mantine/core';
 
-export function RestDocumentationWelcome() {
+export function RestWelcome() {
   return (
     <div>
       <Text>Welcome to the Universalis documentation page.</Text>
