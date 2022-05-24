@@ -1,13 +1,5 @@
-import {
-  AppShell,
-  Navbar,
-  Title,
-  Divider,
-  UnstyledButton,
-  Group,
-  Header,
-  Anchor,
-} from '@mantine/core';
+import { AppShell, Navbar, Title, Divider, Header, Button } from '@mantine/core';
+import { RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
@@ -26,13 +18,17 @@ export default function HomePage() {
           </Navbar.Section>
           <Divider my="sm" />
           <Navbar.Section grow mt="md">
-            <UnstyledButton>
-              <Group>
-                <Anchor component={Link} href="/">
-                  REST API
-                </Anchor>
-              </Group>
-            </UnstyledButton>
+            <Link href="/" passHref>
+              <Button
+                variant="light"
+                color="blue"
+                leftIcon={<RocketIcon />}
+                styles={{ inner: { justifyContent: 'left' } }}
+                fullWidth
+              >
+                REST API
+              </Button>
+            </Link>
           </Navbar.Section>
         </Navbar>
       }
