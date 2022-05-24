@@ -1,12 +1,61 @@
-import { AppShell, Navbar, Title, Divider, Header, Button, SimpleGrid, Group } from '@mantine/core';
+import {
+  AppShell,
+  Navbar,
+  Title,
+  Divider,
+  Header,
+  Button,
+  SimpleGrid,
+  Group,
+  DefaultMantineColor,
+  Space,
+} from '@mantine/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
+import { ReactElement, useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
+import { WebSocketDocumentation } from '../components/WebSocketDocumentation/WebSocketDocumentation';
 import useStyles from './index.styles';
+
+function HomePageNavButton({
+  name,
+  location,
+  color,
+  onClick,
+}: {
+  name: string;
+  location: string;
+  color: DefaultMantineColor;
+  onClick?: (x: string) => void;
+}) {
+  return (
+    <Link href={location} passHref>
+      <Button
+        variant="light"
+        color={color}
+        leftIcon={<RocketIcon />}
+        styles={{ inner: { justifyContent: 'left' } }}
+        onClick={() => {
+          if (onClick != null) onClick(name);
+        }}
+        fullWidth
+      >
+        {name}
+      </Button>
+    </Link>
+  );
+}
 
 export default function HomePage() {
   const { classes } = useStyles();
+
+  const [section, setSection] = useState('REST API');
+
+  const docSections = new Map<string, ReactElement>([
+    ['REST API', <RestDocumentation />],
+    ['WebSocket API', <WebSocketDocumentation />],
+  ]);
 
   return (
     <AppShell
@@ -18,17 +67,14 @@ export default function HomePage() {
           </Navbar.Section>
           <Divider my="sm" />
           <Navbar.Section grow mt="md">
-            <Link href="/" passHref>
-              <Button
-                variant="light"
-                color="blue"
-                leftIcon={<RocketIcon />}
-                styles={{ inner: { justifyContent: 'left' } }}
-                fullWidth
-              >
-                REST API
-              </Button>
-            </Link>
+            <HomePageNavButton name="REST API" location="/" color="blue" onClick={setSection} />
+            <Space h="xs" />
+            <HomePageNavButton
+              name="WebSocket API"
+              location="/"
+              color="green"
+              onClick={setSection}
+            />
           </Navbar.Section>
         </Navbar>
       }
@@ -49,7 +95,7 @@ export default function HomePage() {
         },
       })}
     >
-      <RestDocumentation />
+      {docSections.get(section)}
     </AppShell>
   );
 }
