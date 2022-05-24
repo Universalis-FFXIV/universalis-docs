@@ -32,7 +32,11 @@ function typeToHint(type: SwaggerType): string {
 }
 
 function formatProperty({ name, property }: { name: string; property: SwaggerType }) {
-  let text = `  ${name}: ${typeToHint(property)};`;
+  let text = `  ${name}`;
+  if (property.type != null && property.nullable) {
+    text += '?';
+  }
+  text += `: ${typeToHint(property)};`;
 
   if (property.type != null) {
     if ((property.type === 'string' || property.type === 'integer') && property.format != null) {
