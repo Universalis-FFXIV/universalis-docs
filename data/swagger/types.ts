@@ -1,14 +1,29 @@
+export type SwaggerComponentRef = { $ref: string };
+
+export type SwaggerValue = {
+  description?: string;
+  default?: string;
+  nullable?: boolean;
+};
+
+export type SwaggerArray = SwaggerValue & {
+  items: SwaggerType;
+};
+
+export type SwaggerPrimitive = SwaggerValue & {
+  format?: string;
+};
+
+export type SwaggerComponent = SwaggerValue & {
+  properties: Record<string, SwaggerType>;
+  additionalProperties: false | SwaggerType;
+};
+
 export type SwaggerType =
-  | { type: null | undefined; $ref: string }
-  | {
-      type: string;
-      description?: string;
-      format?: string;
-      default?: string;
-      properties?: Record<string, SwaggerType>;
-      additionalProperties?: boolean;
-      nullable?: boolean;
-    };
+  | ({ type: null | undefined } & SwaggerComponentRef)
+  | ({ type: 'object' } & SwaggerComponent)
+  | ({ type: 'array' } & SwaggerArray)
+  | ({ type: 'string' | 'integer' } & SwaggerPrimitive);
 
 export interface SwaggerEndpoint {
   tags: string[];

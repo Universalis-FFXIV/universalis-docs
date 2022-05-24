@@ -1,16 +1,19 @@
 import { Title, Text, Container, Space, Input, Group, SimpleGrid } from '@mantine/core';
 import { ChevronDownIcon } from '@modulz/radix-icons';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getSchemaUrl } from '../../data/api/universalis';
 import { SwaggerSchema } from '../../data/swagger/types';
+import { RestComponent } from '../RestComponent/RestComponent';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
+import useStyles from './RestDocumentation.styles';
 
 export function RestDocumentation() {
+  const { classes } = useStyles();
+
   const [schemaVersion, setSchemaVersion] = useState<string>('v1');
 
   const [schema, setSchema] = useState<SwaggerSchema>();
   useEffect(() => {
-    fetch(getSchemaUrl(schemaVersion))
+    fetch(`/api/schema/${schemaVersion}`)
       .then((res) => res.json())
       .then(setSchema);
   }, [schemaVersion]);
@@ -47,6 +50,17 @@ export function RestDocumentation() {
             </div>
           ))
       )}
+      <Space h="xl" />
+      <Title id="rest-api-schemas" className={classes.schemasHeader}>
+        Schemas
+      </Title>
+      {Object.keys(schema.components.schemas)
+        .map((name) => ({ name, component: schema.components.schemas[name] }))
+        .map(({ name, component }) => (
+          <div key={name}>
+            <RestComponent name={name} component={component} />
+          </div>
+        ))}
     </Container>
   );
 }
