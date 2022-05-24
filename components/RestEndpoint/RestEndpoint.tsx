@@ -9,6 +9,7 @@ import {
   Container,
   Paper,
   SimpleGrid,
+  Table,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Prism } from '@mantine/prism';
@@ -76,6 +77,18 @@ export function RestEndpoint({
       return aggNext;
     }, {});
 
+  const responses = Object.keys(endpoint.responses)
+    .map((status) => ({
+      status,
+      ...endpoint.responses[status],
+    }))
+    .map((x) => (
+      <tr key={path + method + x.status}>
+        <td>{x.status}</td>
+        <td>{x.description}</td>
+      </tr>
+    ));
+
   const form = useForm({
     initialValues: parameters.reduce<Record<string, string>>((agg, next) => {
       const aggNext = agg;
@@ -97,6 +110,17 @@ export function RestEndpoint({
           <span className={classes.path}>{path}</span>
         </div>
         <Text>{endpoint.summary}</Text>
+        <Space h="xl" />
+        <Text size="lg">Responses</Text>
+        <Table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>{responses}</tbody>
+        </Table>
         <Container sx={{ maxWidth: 700 }} mt="md">
           <form
             onSubmit={form.onSubmit(async (values) => {

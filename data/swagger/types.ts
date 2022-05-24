@@ -36,7 +36,7 @@ export interface SwaggerEndpoint {
     schema: SwaggerType;
   }[];
   responses: Record<
-    number,
+    string,
     {
       description: string;
       content: Record<
