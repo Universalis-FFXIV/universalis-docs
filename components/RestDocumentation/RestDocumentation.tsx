@@ -3,6 +3,7 @@ import { ChevronDownIcon } from '@modulz/radix-icons';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { SwaggerSchema } from '../../data/swagger/types';
 import { RestComponent } from '../RestComponent/RestComponent';
+import { RestDocumentationWelcome } from '../RestDocumentationWelcome/RestDocumentationWelcome';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
 import useStyles from './RestDocumentation.styles';
 
@@ -39,7 +40,7 @@ export function RestDocumentation() {
           </Input>
         </Group>
       </SimpleGrid>
-      <Text dangerouslySetInnerHTML={{ __html: schema.info.description }} />
+      <RestDocumentationWelcome />
       <Space h="xl" />
       {Object.keys(schema.paths).flatMap((path) =>
         Object.keys(schema.paths[path])

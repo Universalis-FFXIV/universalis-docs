@@ -1,4 +1,14 @@
-import { Button, Divider, Group, Paper, SimpleGrid, Space, Text, TextInput } from '@mantine/core';
+import {
+  Button,
+  Code,
+  Divider,
+  Group,
+  Paper,
+  SimpleGrid,
+  Space,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Prism } from '@mantine/prism';
 import { TrashIcon } from '@modulz/radix-icons';
@@ -89,7 +99,7 @@ export function RestEndpointPlayground({
               {...form.getInputProps(param.name)}
             />
             <Text size="md">
-              <code>{param.schema.type != null ? param.schema.type : param.schema.$ref}</code>{' '}
+              <Code>{param.schema.type != null ? param.schema.type : param.schema.$ref}</Code>{' '}
               <em className={classes.parameterType}>({param.in})</em> {param.description}
             </Text>
           </div>
