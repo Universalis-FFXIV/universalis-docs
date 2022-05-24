@@ -9,7 +9,6 @@ import {
   Container,
   Paper,
   SimpleGrid,
-  Table,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Prism } from '@mantine/prism';
@@ -18,6 +17,7 @@ import beautify from 'json-beautify';
 import { useState } from 'react';
 import { request } from '../../data/api/universalis';
 import { SwaggerEndpoint } from '../../data/swagger/types';
+import { RestResponsesTable } from '../RestResponsesTable/RestResponsesTable';
 import useStyles from './RestEndpoint.styles';
 
 function tagToId(tag: string) {
@@ -77,18 +77,6 @@ export function RestEndpoint({
       return aggNext;
     }, {});
 
-  const responses = Object.keys(endpoint.responses)
-    .map((status) => ({
-      status,
-      ...endpoint.responses[status],
-    }))
-    .map((x) => (
-      <tr key={path + method + x.status}>
-        <td>{x.status}</td>
-        <td>{x.description}</td>
-      </tr>
-    ));
-
   const form = useForm({
     initialValues: parameters.reduce<Record<string, string>>((agg, next) => {
       const aggNext = agg;
@@ -112,15 +100,7 @@ export function RestEndpoint({
         <Text>{endpoint.summary}</Text>
         <Space h="xl" />
         <Text size="lg">Responses</Text>
-        <Table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>{responses}</tbody>
-        </Table>
+        <RestResponsesTable path={path} method={method} endpoint={endpoint} />
         <Container sx={{ maxWidth: 700 }} mt="md">
           <form
             onSubmit={form.onSubmit(async (values) => {
