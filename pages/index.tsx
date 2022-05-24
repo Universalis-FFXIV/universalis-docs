@@ -1,12 +1,12 @@
 import {
   AppShell,
   Navbar,
-  Text,
   Title,
   Divider,
   UnstyledButton,
   Group,
   Header,
+  Anchor,
 } from '@mantine/core';
 import Link from 'next/link';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
@@ -28,9 +28,9 @@ export default function HomePage() {
           <Navbar.Section grow mt="md">
             <UnstyledButton>
               <Group>
-                <Text>
-                  <Link href="/">REST API</Link>
-                </Text>
+                <Anchor component={Link} href="/">
+                  REST API
+                </Anchor>
               </Group>
             </UnstyledButton>
           </Navbar.Section>
