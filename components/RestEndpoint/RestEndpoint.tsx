@@ -1,5 +1,20 @@
-import { Space, Text, Title, Divider, Group, Button, TextInput, Container } from '@mantine/core';
+import {
+  Space,
+  Text,
+  Title,
+  Divider,
+  Group,
+  Button,
+  TextInput,
+  Container,
+  Paper,
+  SimpleGrid,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { Prism } from '@mantine/prism';
+import { TrashIcon } from '@modulz/radix-icons';
+import beautify from 'json-beautify';
+import { useState } from 'react';
 import { request } from '../../data/api/universalis';
 import { SwaggerEndpoint } from '../../data/swagger/types';
 import useStyles from './RestEndpoint.styles';
@@ -48,6 +63,9 @@ export function RestEndpoint({
 }) {
   const { classes } = useStyles();
 
+  const [executing, setExecuting] = useState(false);
+  const [apiResponse, setApiResponse] = useState();
+
   const parameters = endpoint.parameters ?? [];
   const parametersIn = parameters
     .filter((param) => param.schema.type != null)
@@ -81,9 +99,12 @@ export function RestEndpoint({
         <Text>{endpoint.summary}</Text>
         <Container sx={{ maxWidth: 700 }} mt="md">
           <form
-            onSubmit={form.onSubmit((values) =>
-              executeRequest(method, path, values, parametersIn).then(console.log)
-            )}
+            onSubmit={form.onSubmit(async (values) => {
+              setExecuting(true);
+              const res = await executeRequest(method, path, values, parametersIn);
+              setApiResponse(res);
+              setExecuting(false);
+            })}
           >
             {parameters.map((param) => (
               <div key={path + method + param.name}>
@@ -101,9 +122,42 @@ export function RestEndpoint({
               </div>
             ))}
             <Group position="right" mt="md">
-              <Button type="submit">Execute</Button>
+              <Button type="submit" disabled={executing}>
+                Execute
+              </Button>
             </Group>
           </form>
+          {(() => {
+            if (apiResponse != null) {
+              return (
+                <div>
+                  <Space h="lg" />
+                  <Divider />
+                  <Space h="lg" />
+                  <SimpleGrid cols={2}>
+                    <Text size="lg">Response</Text>
+                    <Group position="right">
+                      <Button
+                        color="red"
+                        leftIcon={<TrashIcon />}
+                        onClick={() => setApiResponse(undefined)}
+                      >
+                        Clear
+                      </Button>
+                    </Group>
+                  </SimpleGrid>
+                  <Space h="sm" />
+                  <Paper className={classes.response}>
+                    <Prism language="javascript">
+                      {beautify(apiResponse, null as unknown as object, 2, 80)}
+                    </Prism>
+                  </Paper>
+                </div>
+              );
+            }
+
+            return <div />;
+          })()}
         </Container>
       </div>
     </div>

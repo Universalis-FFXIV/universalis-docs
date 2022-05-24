@@ -20,4 +20,8 @@ export default createStyles((theme) => ({
   parameterType: {
     color: 'grey',
   },
+  response: {
+    maxHeight: '700px',
+    overflowY: 'scroll',
+  },
 }));

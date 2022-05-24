@@ -31,8 +31,6 @@ function typeToHint(type: SwaggerType): string {
   return type.type;
 }
 
-const newLineRegex = /\r?\n/g;
-
 function formatProperty({ name, property }: { name: string; property: SwaggerType }) {
   let text = `  ${name}: ${typeToHint(property)};`;
 
@@ -43,7 +41,7 @@ function formatProperty({ name, property }: { name: string; property: SwaggerTyp
 
     if (property.description != null) {
       text = `${property.description
-        .split(newLineRegex)
+        .split(/\r?\n/g)
         .reduce((agg, next) => `${agg}  // ${next}\n`, '')}${text}`;
     }
   }
