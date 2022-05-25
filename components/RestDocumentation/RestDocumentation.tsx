@@ -52,7 +52,7 @@ export function RestDocumentation() {
       <Text size="lg">Table of contents</Text>
       <List type="ordered">
         {endpointHeaders.map((h, i) => (
-          <List.Item>
+          <List.Item key={`toc${h}`}>
             <Link href={`#${endpointIds[i]}`}>{h}</Link>
           </List.Item>
         ))}
