@@ -9,6 +9,7 @@ import {
   DefaultMantineColor,
   Affix,
   Transition,
+  Anchor,
 } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
 import { ArrowUpIcon, CubeIcon, RocketIcon } from '@modulz/radix-icons';
@@ -110,7 +111,9 @@ export default function HomePage() {
           })}
         >
           <SimpleGrid cols={2}>
-            <Title className={classes.title}>Universalis</Title>
+            <Anchor href="https://universalis.app" style={{ textDecoration: 'none' }}>
+              <Title className={classes.title}>Universalis</Title>
+            </Anchor>
             <Group position="right">
               <ColorSchemeToggle />
             </Group>
