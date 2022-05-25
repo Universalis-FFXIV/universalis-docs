@@ -1,12 +1,17 @@
-import { Title, Text, Container, Space, Input, Group, SimpleGrid } from '@mantine/core';
+import { Title, Text, Container, Space, Input, Group, SimpleGrid, List, Box } from '@mantine/core';
 import { ChevronDownIcon } from '@modulz/radix-icons';
 import { ChangeEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { SwaggerSchema } from '../../data/swagger/types';
 import { RestComponent } from '../RestComponent/RestComponent';
 import { RestWelcome } from '../RestWelcome/RestWelcome';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
 import useStyles from './RestDocumentation.styles';
 import { LoadingDocumentation } from '../LoadingDocumentation/LoadingDocumentation';
+
+function tagToId(tag: string) {
+  return tag.toLowerCase().replace(/\s+/g, '-');
+}
 
 export function RestDocumentation() {
   const { classes } = useStyles();
@@ -24,6 +29,36 @@ export function RestDocumentation() {
   if (schema == null) {
     return <LoadingDocumentation />;
   }
+
+  const simpleSchema = Object.keys(schema.paths).flatMap((path) =>
+    Object.keys(schema.paths[path]).map((method) => ({
+      path,
+      method,
+      endpoint: schema.paths[path][method],
+    }))
+  );
+
+  const endpointHeaders = simpleSchema.map(({ endpoint }) => endpoint.tags[0]);
+  const endpointIds = endpointHeaders.map(tagToId);
+
+  const toc = (
+    <Box
+      sx={(theme) => ({
+        width: 400,
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+        padding: 4,
+      })}
+    >
+      <Text size="lg">Table of contents</Text>
+      <List type="ordered">
+        {endpointHeaders.map((h, i) => (
+          <List.Item>
+            <Link href={`#${endpointIds[i]}`}>{h}</Link>
+          </List.Item>
+        ))}
+      </List>
+    </Box>
+  );
 
   return (
     <Container>
@@ -43,16 +78,14 @@ export function RestDocumentation() {
         </Group>
       </SimpleGrid>
       <RestWelcome />
+      <Space h="md" />
+      {toc}
       <Space h="xl" />
-      {Object.keys(schema.paths).flatMap((path) =>
-        Object.keys(schema.paths[path])
-          .map((method) => ({ method, endpoint: schema.paths[path][method] }))
-          .map(({ method, endpoint }) => (
-            <div key={path + method}>
-              <RestEndpoint path={path} method={method} endpoint={endpoint} />
-            </div>
-          ))
-      )}
+      {simpleSchema.map(({ path, method, endpoint }) => (
+        <div key={path + method}>
+          <RestEndpoint path={path} method={method} endpoint={endpoint} />
+        </div>
+      ))}
       <Space h="xl" />
       <Title id="rest-api-schemas" className={classes.schemasHeader}>
         Schemas

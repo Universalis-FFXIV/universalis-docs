@@ -7,6 +7,10 @@ export default createStyles((theme) => ({
     fontWeight: 600,
     letterSpacing: -1,
   },
+  anchor: {
+    paddingTop: 60,
+    marginTop: -60,
+  },
   method: {
     fontWeight: 600,
     textTransform: 'uppercase',

@@ -7,8 +7,11 @@ import {
   SimpleGrid,
   Group,
   DefaultMantineColor,
+  Affix,
+  Transition,
 } from '@mantine/core';
-import { CubeIcon, RocketIcon } from '@modulz/radix-icons';
+import { useWindowScroll } from '@mantine/hooks';
+import { ArrowUpIcon, CubeIcon, RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
 import { ReactElement, ReactNode, useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
@@ -56,6 +59,8 @@ export default function HomePage() {
     ['REST API', <RestDocumentation />],
     ['WebSocket API', <WebSocketDocumentation />],
   ]);
+
+  const [scroll, scrollTo] = useWindowScroll();
 
   const navBarWidth = 260;
   const headerHeight = 60;
@@ -121,6 +126,19 @@ export default function HomePage() {
       >
         {docSections.get(section)}
       </div>
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="slide-up" mounted={scroll.y > 0}>
+          {(transitionStyles) => (
+            <Button
+              leftIcon={<ArrowUpIcon />}
+              style={transitionStyles}
+              onClick={() => scrollTo({ y: 0 })}
+            >
+              Scroll to top
+            </Button>
+          )}
+        </Transition>
+      </Affix>
     </AppShell>
   );
 }

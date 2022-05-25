@@ -22,7 +22,7 @@ export function RestEndpoint({
   return (
     <div>
       <Space h="lg" />
-      <Title className={classes.title} id={tagToId(endpoint.tags[0])}>
+      <Title className={`${classes.title} ${classes.anchor}`} id={tagToId(endpoint.tags[0])}>
         {endpoint.tags[0]}
       </Title>
       <Divider />
