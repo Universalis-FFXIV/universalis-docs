@@ -15,6 +15,7 @@ export function RestDocumentation() {
 
   const [schema, setSchema] = useState<SwaggerSchema>();
   useEffect(() => {
+    setSchema(undefined);
     fetch(`/api/schema/${schemaVersion}`)
       .then((res) => res.json())
       .then(setSchema);

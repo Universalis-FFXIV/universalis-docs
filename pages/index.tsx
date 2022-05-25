@@ -8,9 +8,9 @@ import {
   Group,
   DefaultMantineColor,
 } from '@mantine/core';
-import { RocketIcon } from '@modulz/radix-icons';
+import { CubeIcon, RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
-import { ReactElement, useState } from 'react';
+import { ReactElement, ReactNode, useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
 import { WebSocketDocumentation } from '../components/WebSocketDocumentation/WebSocketDocumentation';
@@ -19,11 +19,13 @@ import useStyles from './index.styles';
 function HomePageNavButton({
   name,
   location,
+  icon,
   color,
   onClick,
 }: {
   name: string;
   location: string;
+  icon: ReactNode;
   color: DefaultMantineColor;
   onClick?: (x: string) => void;
 }) {
@@ -32,7 +34,7 @@ function HomePageNavButton({
       <Button
         variant="light"
         color={color}
-        leftIcon={<RocketIcon />}
+        leftIcon={icon}
         styles={{ inner: { justifyContent: 'left' } }}
         mb={10}
         onClick={() => {
@@ -61,11 +63,28 @@ export default function HomePage() {
   return (
     <AppShell
       navbar={
-        <Navbar width={{ base: navBarWidth }} p="xs" fixed>
+        <Navbar
+          width={{ base: navBarWidth }}
+          p="xs"
+          fixed
+          styles={(theme) => ({
+            root: {
+              backgroundColor:
+                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+            },
+          })}
+        >
           <Navbar.Section grow mt="md">
-            <HomePageNavButton name="REST API" location="/" color="blue" onClick={setSection} />
+            <HomePageNavButton
+              name="REST API"
+              icon={<CubeIcon />}
+              location="/"
+              color="blue"
+              onClick={setSection}
+            />
             <HomePageNavButton
               name="WebSocket API"
+              icon={<RocketIcon />}
               location="/"
               color="green"
               onClick={setSection}
@@ -74,7 +93,17 @@ export default function HomePage() {
         </Navbar>
       }
       header={
-        <Header height={headerHeight} p="xs" fixed>
+        <Header
+          height={headerHeight}
+          p="xs"
+          fixed
+          styles={(theme) => ({
+            root: {
+              backgroundColor:
+                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+            },
+          })}
+        >
           <SimpleGrid cols={2}>
             <Title className={classes.title}>Universalis</Title>
             <Group position="right">
@@ -83,18 +112,11 @@ export default function HomePage() {
           </SimpleGrid>
         </Header>
       }
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        },
-      })}
     >
       <div
         style={{
           marginLeft: navBarWidth,
           marginTop: headerHeight,
-          height: `calc(100vh - ${headerHeight + 32}px)`,
         }}
       >
         {docSections.get(section)}
