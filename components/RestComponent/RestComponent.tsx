@@ -1,4 +1,4 @@
-import { Divider, Space, Title } from '@mantine/core';
+import { Box, Divider, Space, Title } from '@mantine/core';
 import { Prism } from '@mantine/prism';
 import { SwaggerType } from '../../data/swagger/types';
 import useStyles from './RestComponent.styles';
@@ -75,9 +75,11 @@ export function RestComponent({ name, component }: { name: string; component: Sw
         {name}
       </Title>
       <Divider />
-      <Prism language="typescript">
-        {`interface ${name} {\n${props.reduce((agg, next) => `${agg}${next}\n`, '')}}`}
-      </Prism>
+      <Box className={classes.componentBox}>
+        <Prism language="typescript">
+          {`interface ${name} {\n${props.reduce((agg, next) => `${agg}${next}\n`, '')}}`}
+        </Prism>
+      </Box>
     </div>
   );
 }

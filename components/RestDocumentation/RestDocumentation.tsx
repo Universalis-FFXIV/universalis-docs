@@ -6,6 +6,7 @@ import { RestComponent } from '../RestComponent/RestComponent';
 import { RestWelcome } from '../RestWelcome/RestWelcome';
 import { RestEndpoint } from '../RestEndpoint/RestEndpoint';
 import useStyles from './RestDocumentation.styles';
+import { LoadingDocumentation } from '../LoadingDocumentation/LoadingDocumentation';
 
 export function RestDocumentation() {
   const { classes } = useStyles();
@@ -20,11 +21,7 @@ export function RestDocumentation() {
   }, [schemaVersion]);
 
   if (schema == null) {
-    return (
-      <Container>
-        <Text>Loading schema...</Text>
-      </Container>
-    );
+    return <LoadingDocumentation />;
   }
 
   return (

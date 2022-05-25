@@ -2,13 +2,11 @@ import {
   AppShell,
   Navbar,
   Title,
-  Divider,
   Header,
   Button,
   SimpleGrid,
   Group,
   DefaultMantineColor,
-  Space,
 } from '@mantine/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
@@ -36,6 +34,7 @@ function HomePageNavButton({
         color={color}
         leftIcon={<RocketIcon />}
         styles={{ inner: { justifyContent: 'left' } }}
+        mb={10}
         onClick={() => {
           if (onClick != null) onClick(name);
         }}
@@ -51,24 +50,20 @@ export default function HomePage() {
   const { classes } = useStyles();
 
   const [section, setSection] = useState('REST API');
-
   const docSections = new Map<string, ReactElement>([
     ['REST API', <RestDocumentation />],
     ['WebSocket API', <WebSocketDocumentation />],
   ]);
 
+  const navBarWidth = 260;
+  const headerHeight = 60;
+
   return (
     <AppShell
-      padding="md"
       navbar={
-        <Navbar width={{ base: 300 }} p="xs">
-          <Navbar.Section>
-            <Title className={classes.title}>Universalis</Title>
-          </Navbar.Section>
-          <Divider my="sm" />
+        <Navbar width={{ base: navBarWidth }} p="xs" fixed>
           <Navbar.Section grow mt="md">
             <HomePageNavButton name="REST API" location="/" color="blue" onClick={setSection} />
-            <Space h="xs" />
             <HomePageNavButton
               name="WebSocket API"
               location="/"
@@ -79,9 +74,9 @@ export default function HomePage() {
         </Navbar>
       }
       header={
-        <Header height={60} p="xs">
+        <Header height={headerHeight} p="xs" fixed>
           <SimpleGrid cols={2}>
-            <div />
+            <Title className={classes.title}>Universalis</Title>
             <Group position="right">
               <ColorSchemeToggle />
             </Group>
@@ -95,7 +90,15 @@ export default function HomePage() {
         },
       })}
     >
-      {docSections.get(section)}
+      <div
+        style={{
+          marginLeft: navBarWidth,
+          marginTop: headerHeight,
+          height: `calc(100vh - ${headerHeight + 32}px)`,
+        }}
+      >
+        {docSections.get(section)}
+      </div>
     </AppShell>
   );
 }

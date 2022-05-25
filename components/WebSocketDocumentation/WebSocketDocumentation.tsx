@@ -1,3 +1,9 @@
+import { Container, Text } from '@mantine/core';
+
 export function WebSocketDocumentation() {
-  return <div>Coming soon</div>;
+  return (
+    <Container>
+      <Text>Coming soon</Text>
+    </Container>
+  );
 }

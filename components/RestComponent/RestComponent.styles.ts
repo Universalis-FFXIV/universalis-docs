@@ -7,4 +7,7 @@ export default createStyles((theme) => ({
     fontWeight: 600,
     letterSpacing: -1,
   },
+  componentBox: {
+    backgroundColor: theme.colorScheme === 'dark' ? undefined : theme.white,
+  },
 }));
