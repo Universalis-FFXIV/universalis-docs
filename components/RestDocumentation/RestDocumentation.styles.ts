@@ -1,7 +1,7 @@
 import { createStyles } from '@mantine/core';
 
 export default createStyles((theme) => ({
-  schemasHeader: {
+  sectionHeader: {
     color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     fontSize: 32,
     fontWeight: 600,

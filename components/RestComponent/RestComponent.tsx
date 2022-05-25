@@ -70,11 +70,11 @@ export function RestComponent({ name, component }: { name: string; component: Sw
 
   return (
     <div>
-      <Title className={classes.title} mt={36} id={nameToId(name)}>
+      <Title className={`${classes.title} ${classes.anchor}`} id={nameToId(name)}>
         {name}
       </Title>
       <Divider />
-      <Box className={classes.componentBox} mt={16}>
+      <Box className={classes.componentBox} mt={16} mb={16}>
         <Prism language="typescript">
           {`interface ${name} {\n${props.reduce((agg, next) => `${agg}${next}\n`, '')}}`}
         </Prism>
