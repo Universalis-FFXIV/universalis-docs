@@ -20,7 +20,11 @@ export function RestDocumentation() {
   }, [schemaVersion]);
 
   if (schema == null) {
-    return <div />;
+    return (
+      <Container>
+        <Text>Loading schema...</Text>
+      </Container>
+    );
   }
 
   return (
