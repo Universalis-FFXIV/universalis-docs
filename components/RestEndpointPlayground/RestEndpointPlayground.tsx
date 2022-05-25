@@ -105,7 +105,7 @@ export function RestEndpointPlayground({
           </div>
         ))}
         <Group position="right" mt="md">
-          <Button type="submit" disabled={executing}>
+          <Button type="submit" loading={executing}>
             Execute
           </Button>
         </Group>
