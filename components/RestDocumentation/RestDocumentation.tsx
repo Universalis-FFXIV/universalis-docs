@@ -46,7 +46,7 @@ export function RestDocumentation() {
       sx={(theme) => ({
         width: 400,
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        padding: 4,
+        padding: 8,
       })}
     >
       <Text size="lg">Table of contents</Text>
