@@ -8,16 +8,20 @@ import {
   Group,
   DefaultMantineColor,
   Affix,
+  Text,
   Transition,
   Anchor,
+  Select,
+  Divider,
 } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
-import { ArrowUpIcon, CubeIcon, RocketIcon } from '@modulz/radix-icons';
+import { ChevronUpIcon, CubeIcon, RocketIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
-import { ReactElement, ReactNode, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
 import { WebSocketDocumentation } from '../components/WebSocketDocumentation/WebSocketDocumentation';
+import { SwaggerSchema } from '../data/swagger/types';
 import useStyles from './index.styles';
 
 function HomePageNavButton({
@@ -55,9 +59,19 @@ function HomePageNavButton({
 export default function HomePage() {
   const { classes } = useStyles();
 
+  const [schemaVersion, setSchemaVersion] = useState<string>('v1');
+
+  const [schema, setSchema] = useState<SwaggerSchema>();
+  useEffect(() => {
+    setSchema(undefined);
+    fetch(`/api/schema/${schemaVersion}`)
+      .then((res) => res.json())
+      .then(setSchema);
+  }, [schemaVersion]);
+
   const [section, setSection] = useState('REST API');
   const docSections = new Map<string, ReactElement>([
-    ['REST API', <RestDocumentation />],
+    ['REST API', <RestDocumentation schema={schema} />],
     ['WebSocket API', <WebSocketDocumentation />],
   ]);
 
@@ -81,6 +95,15 @@ export default function HomePage() {
           })}
         >
           <Navbar.Section grow mt="md">
+            <Group mb={10} grow>
+              <Text>API Version</Text>
+              <Select
+                value={schemaVersion}
+                onChange={(value) => setSchemaVersion(value ?? 'v1')}
+                data={['v1', 'v2']}
+              />
+            </Group>
+            <Divider mb={10} />
             <HomePageNavButton
               name="REST API"
               icon={<CubeIcon />}
@@ -129,15 +152,11 @@ export default function HomePage() {
       >
         {docSections.get(section)}
       </div>
-      <Affix position={{ bottom: 20, right: 20 }}>
+      <Affix position={{ bottom: 40, right: 40 }}>
         <Transition transition="slide-up" mounted={scroll.y > 0}>
           {(transitionStyles) => (
-            <Button
-              leftIcon={<ArrowUpIcon />}
-              style={transitionStyles}
-              onClick={() => scrollTo({ y: 0 })}
-            >
-              Scroll to top
+            <Button style={transitionStyles} onClick={() => scrollTo({ y: 0 })}>
+              <ChevronUpIcon />
             </Button>
           )}
         </Transition>
