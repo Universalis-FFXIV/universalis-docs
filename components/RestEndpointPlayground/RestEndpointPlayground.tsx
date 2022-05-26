@@ -14,13 +14,13 @@ import { Prism } from '@mantine/prism';
 import { TrashIcon } from '@modulz/radix-icons';
 import beautify from 'json-beautify';
 import { useState } from 'react';
-import { request } from '../../data/api/universalis';
+import { buildUrl } from '../../data/api/universalis';
 import { SwaggerEndpoint } from '../../data/swagger/types';
 import useStyles from './RestEndpointPlayground.styles';
 
-function getParametersOfType(p: Record<string, string>, pt: Record<string, string>, type: string) {
+function getParameters(p: Record<string, string>, pt: Record<string, string>) {
   return Object.keys(p)
-    .filter((k) => pt[k] === type)
+    .filter((k) => pt[k] === 'path')
     .reduce<Record<string, string>>((agg, k) => {
       const aggNext = agg;
       aggNext[k] = p[k];
@@ -28,14 +28,24 @@ function getParametersOfType(p: Record<string, string>, pt: Record<string, strin
     }, {});
 }
 
-function executeRequest(
-  method: string,
+function getQueryParameters(p: Record<string, string>, pt: Record<string, string>) {
+  return Object.keys(p)
+    .filter((k) => pt[k] === 'query')
+    .filter((k) => p[k] !== '')
+    .reduce<Record<string, string>>((agg, k) => {
+      const aggNext = agg;
+      aggNext[k] = p[k];
+      return aggNext;
+    }, {});
+}
+
+function injectPath(
   path: string,
   values: Record<string, string>,
   parametersIn: Record<string, string>
-): Promise<any> {
-  const pathValues = getParametersOfType(values, parametersIn, 'path');
-  const queryValues = getParametersOfType(values, parametersIn, 'query');
+): string {
+  const pathValues = getParameters(values, parametersIn);
+  const queryValues = getQueryParameters(values, parametersIn);
 
   const injectedPath = Object.keys(pathValues).reduce(
     (agg, k) => agg.replace(`{${k}}`, pathValues[k]),
@@ -44,7 +54,16 @@ function executeRequest(
   const query =
     Object.keys(queryValues).length === 0 ? undefined : new URLSearchParams(queryValues);
 
-  return request(method, injectedPath, query);
+  return buildUrl(injectedPath, query);
+}
+
+function executeRequest(
+  method: string,
+  path: string,
+  values: Record<string, string>,
+  parametersIn: Record<string, string>
+): Promise<any> {
+  return fetch(injectPath(path, values, parametersIn), { method }).then((res) => res.json());
 }
 
 export function RestEndpointPlayground({
@@ -104,6 +123,7 @@ export function RestEndpointPlayground({
             </Text>
           </div>
         ))}
+        <Text mt={16}>{injectPath(path, form.values, parametersIn)}</Text>
         <Group position="right" mt="md">
           <Button type="submit" loading={executing}>
             Execute
