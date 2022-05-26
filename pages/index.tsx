@@ -72,7 +72,7 @@ export default function HomePage() {
   const [section, setSection] = useState('REST API');
   const docSections = new Map<string, ReactElement>([
     ['REST API', <RestDocumentation schema={schema} />],
-    ['WebSocket API', <WebSocketDocumentation />],
+    ['WebSocket API', <WebSocketDocumentation schema={schema} />],
   ]);
 
   const [scroll, scrollTo] = useWindowScroll();

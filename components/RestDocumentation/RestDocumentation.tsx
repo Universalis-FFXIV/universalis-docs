@@ -25,7 +25,6 @@ export function RestDocumentation({ schema }: { schema?: SwaggerSchema }) {
   return (
     <Container>
       <Title id="rest-api">{schema.info.title} REST API</Title>
-
       <RestWelcome />
       <Space h="md" />
       <RestTableOfContents schema={schema} />
