@@ -48,6 +48,7 @@ export function RestDocumentation({ schema }: { schema?: SwaggerSchema }) {
             <RestComponent name={name} component={component} />
           </div>
         ))}
+      <Space mt={200} />
     </Container>
   );
 }
