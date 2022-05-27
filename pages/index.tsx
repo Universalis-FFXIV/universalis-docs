@@ -1,7 +1,6 @@
 import {
   AppShell,
   Navbar,
-  Title,
   Header,
   Button,
   SimpleGrid,
@@ -13,16 +12,18 @@ import {
   Anchor,
   Select,
   Divider,
+  Image,
+  UnstyledButton,
+  ActionIcon,
 } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
-import { ChevronUpIcon, CubeIcon, RocketIcon } from '@modulz/radix-icons';
-import Link from 'next/link';
+import { ChevronUpIcon, CubeIcon, GitHubLogoIcon, RocketIcon } from '@modulz/radix-icons';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { RestDocumentation } from '../components/RestDocumentation/RestDocumentation';
 import { WebSocketDocumentation } from '../components/WebSocketDocumentation/WebSocketDocumentation';
 import { SwaggerSchema } from '../data/swagger/types';
-import useStyles from './index.styles';
 
 function HomePageNavButton({
   name,
@@ -57,8 +58,6 @@ function HomePageNavButton({
 }
 
 export default function HomePage() {
-  const { classes } = useStyles();
-
   const [schemaVersion, setSchemaVersion] = useState<string>('v1');
 
   const [schema, setSchema] = useState<SwaggerSchema>();
@@ -119,6 +118,20 @@ export default function HomePage() {
               onClick={setSection}
             />
           </Navbar.Section>
+          <Navbar.Section mt="md">
+            <Divider mb={10} />
+            <Group>
+              <UnstyledButton
+                component="a"
+                href="https://github.com/Universalis-FFXIV/Universalis"
+                target="_blank"
+              >
+                <ActionIcon size="lg">
+                  <GitHubLogoIcon height={26} width={26} />
+                </ActionIcon>
+              </UnstyledButton>
+            </Group>
+          </Navbar.Section>
         </Navbar>
       }
       header={
@@ -134,9 +147,11 @@ export default function HomePage() {
           })}
         >
           <SimpleGrid cols={2}>
-            <Anchor href="https://universalis.app" style={{ textDecoration: 'none' }}>
-              <Title className={classes.title}>Universalis</Title>
-            </Anchor>
+            <Group>
+              <Anchor href="https://universalis.app" style={{ textDecoration: 'none' }}>
+                <Image src="/universalis_bodge.png" height={headerHeight - 16} />
+              </Anchor>
+            </Group>
             <Group position="right">
               <ColorSchemeToggle />
             </Group>

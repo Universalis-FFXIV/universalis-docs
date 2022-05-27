@@ -102,7 +102,7 @@ ws.on("open", () => {
       <Text mt={16}>
         Events can be filtered on the server by appending a filter string to your{' '}
         <Code>subscribe</Code> request. Filter strings are comma-separated lists of fields that
-        should be matched on sent messages. For example, messages on the <Code>listings/add</Code>
+        should be matched on sent messages. For example, messages on the <Code>listings/add</Code>{' '}
         channel have a <Code>world</Code> field, containing the world ID of the listing upload data.
         Adding <Code>{'{world=73}'}</Code> to the event channel will filter uploads to Adamantoise
         only:
