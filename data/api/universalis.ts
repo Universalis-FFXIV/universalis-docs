@@ -10,5 +10,5 @@ export function buildUrl(path: string, query?: URLSearchParams): string {
 }
 
 export function getSchemaUrl(version: string): string {
-  return `${website}/docs/swagger/${version}/swagger.json`;
+  return `${website}/swagger/${version}/swagger.json`;
 }
