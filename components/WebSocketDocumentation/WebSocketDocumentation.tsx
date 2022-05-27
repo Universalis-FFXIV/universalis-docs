@@ -34,7 +34,7 @@ export function WebSocketDocumentation({ schema }: { schema?: SwaggerSchema }) {
         To begin with, connect to the WebSocket endpoint and set up BSON deserializtion.
       </Text>
       <Prism.Tabs mt={16}>
-        <Prism.Tab label="app.js" withLineNumbers language="javascript">
+        <Prism.Tab label="Node" withLineNumbers language="javascript">
           {`import { deserialize } from "bson";
 import WebSocket from "ws";
 
@@ -77,7 +77,7 @@ ws.on("message", data => {
         must be BSON-serialized.
       </Text>
       <Prism.Tabs mt={16}>
-        <Prism.Tab label="app.js" withLineNumbers language="javascript">
+        <Prism.Tab label="Node" withLineNumbers language="javascript">
           {`import { deserialize, serialize } from "bson";
 
 // ...
@@ -95,7 +95,7 @@ ws.on("open", () => {
       </Text>
       <Text mt={16}>Unsubscribing from an event channel works similarly:</Text>
       <Prism.Tabs mt={16}>
-        <Prism.Tab label="app.js" withLineNumbers language="javascript">
+        <Prism.Tab label="Node" withLineNumbers language="javascript">
           {'ws.send(serialize({ event: "unsubscribe", channel: "listings/add" }));'}
         </Prism.Tab>
       </Prism.Tabs>
@@ -108,7 +108,7 @@ ws.on("open", () => {
         only:
       </Text>
       <Prism.Tabs mt={16}>
-        <Prism.Tab label="app.js" withLineNumbers language="javascript">
+        <Prism.Tab label="Node" withLineNumbers language="javascript">
           {'ws.send(serialize({ event: "subscribe", channel: "listings/add{world=73}" }));'}
         </Prism.Tab>
       </Prism.Tabs>
@@ -117,7 +117,7 @@ ws.on("open", () => {
         field in an OR pattern. Here, we subscribe to Adamantoise and Gilgamesh at the same time:
       </Text>
       <Prism.Tabs mt={16}>
-        <Prism.Tab label="app.js" withLineNumbers language="javascript">
+        <Prism.Tab label="Node" withLineNumbers language="javascript">
           {`ws.send(serialize({ event: "subscribe", channel: "listings/add{world=73}" }));
 ws.send(serialize({ event: "subscribe", channel: "listings/add{world=63}" }));`}
         </Prism.Tab>
