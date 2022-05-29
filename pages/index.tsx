@@ -3,7 +3,6 @@ import {
   Navbar,
   Header,
   Button,
-  SimpleGrid,
   Group,
   DefaultMantineColor,
   Affix,
@@ -146,16 +145,16 @@ export default function HomePage() {
             },
           })}
         >
-          <SimpleGrid cols={2}>
+          <Group style={{ justifyContent: 'space-between' }}>
             <Group>
               <Anchor href="https://universalis.app" style={{ textDecoration: 'none' }}>
-                <Image src="/universalis_bodge.png" height={headerHeight - 16} />
+                <Image src="/universalis_bodge.png" height={headerHeight - 21} />
               </Anchor>
             </Group>
             <Group position="right">
               <ColorSchemeToggle />
             </Group>
-          </SimpleGrid>
+          </Group>
         </Header>
       }
     >

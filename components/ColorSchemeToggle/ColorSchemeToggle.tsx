@@ -7,7 +7,7 @@ export function ColorSchemeToggle() {
   return (
     <ActionIcon
       onClick={() => toggleColorScheme()}
-      size="xl"
+      size={39}
       sx={(theme) => ({
         color: theme.colorScheme === 'dark' ? theme.colors.yellow[4] : theme.colors.blue[6],
       })}
