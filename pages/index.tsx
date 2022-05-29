@@ -16,6 +16,7 @@ import {
   ActionIcon,
   MediaQuery,
   Burger,
+  useMantineTheme,
 } from '@mantine/core';
 import { useViewportSize, useWindowScroll } from '@mantine/hooks';
 import { ChevronUpIcon, CubeIcon, GitHubLogoIcon, RocketIcon } from '@modulz/radix-icons';
@@ -77,15 +78,24 @@ export default function HomePage() {
 
   const [scroll, scrollTo] = useWindowScroll();
 
+  const theme = useMantineTheme();
+
   const navBarWidth = 260;
   const headerHeight = 60;
+
+  const narrowBreakpoint = 768;
+  const mobileBreakpoint = 500;
 
   const [navOpen, setNavOpen] = useState(false);
 
   const { width } = useViewportSize();
-  if (!navOpen && width >= 768) {
-    setNavOpen(true);
-  }
+  useEffect(() => {
+    if (!navOpen && width >= narrowBreakpoint) {
+      setNavOpen(true);
+    } else if (navOpen && width < narrowBreakpoint) {
+      setNavOpen(false);
+    }
+  }, [width]);
 
   return (
     <AppShell
@@ -95,11 +105,11 @@ export default function HomePage() {
             <Navbar
               width={{ base: navBarWidth }}
               p="xs"
-              hiddenBreakpoint="sm"
+              hiddenBreakpoint={narrowBreakpoint}
               hidden={!navOpen}
               fixed
               style={transitionStyles}
-              styles={(theme) => ({
+              styles={() => ({
                 root: {
                   backgroundColor:
                     theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
@@ -154,28 +164,44 @@ export default function HomePage() {
           height={headerHeight}
           p="xs"
           fixed
-          styles={(theme) => ({
+          styles={() => ({
             root: {
               backgroundColor:
                 theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+              zIndex: 101, // Puts this over the navbar
             },
           })}
         >
           <Group style={{ justifyContent: 'space-between' }}>
             <Group>
               <Anchor href="https://universalis.app" style={{ textDecoration: 'none' }}>
-                <MediaQuery query="(max-width: 370px)" styles={{ display: 'none' }}>
+                <MediaQuery
+                  query={`(max-width: ${mobileBreakpoint}px)`}
+                  styles={{ display: 'none' }}
+                >
                   <Image src="/universalis_bodge.png" height={headerHeight - 21} />
                 </MediaQuery>
-                <MediaQuery query="(min-width: 370px)" styles={{ display: 'none' }}>
-                  <Text size="xl">Universalis</Text>
+                <MediaQuery
+                  query={`(min-width: ${mobileBreakpoint}px)`}
+                  styles={{ display: 'none' }}
+                >
+                  <Image
+                    src="/universalis.png"
+                    height={headerHeight}
+                    style={{ position: 'absolute', top: 8 }}
+                  />
                 </MediaQuery>
               </Anchor>
             </Group>
             <Group position="right">
               <ColorSchemeToggle />
-              <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-                <Burger opened={navOpen} onClick={() => setNavOpen((o) => !o)} size="sm" />
+              <MediaQuery largerThan={narrowBreakpoint} styles={{ display: 'none' }}>
+                <Burger
+                  opened={navOpen}
+                  onClick={() => setNavOpen((o) => !o)}
+                  color={theme.colorScheme === 'dark' ? theme.colors.gray[0] : theme.black}
+                  size="sm"
+                />
               </MediaQuery>
             </Group>
           </Group>
@@ -183,7 +209,7 @@ export default function HomePage() {
       }
     >
       <div>
-        <MediaQuery largerThan="sm" styles={{ marginLeft: navBarWidth }}>
+        <MediaQuery largerThan={narrowBreakpoint} styles={{ marginLeft: navBarWidth }}>
           <div style={{ marginTop: headerHeight }}>{docSections.get(section)}</div>
         </MediaQuery>
         <Affix position={{ bottom: 40, right: 40 }}>
