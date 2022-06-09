@@ -38,7 +38,7 @@ export function WebSocketDocumentation({ schema }: { schema?: SwaggerSchema }) {
           {`import { deserialize } from "bson";
 import WebSocket from "ws";
 
-const addr = "https://universalis.app/api/ws";
+const addr = "wss://universalis.app/api/ws";
 
 const ws = new WebSocket(addr);
 
