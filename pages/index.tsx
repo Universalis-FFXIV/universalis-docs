@@ -60,7 +60,10 @@ function HomePageNavButton({
 }
 
 export default function HomePage() {
-  const [schemaVersion, setSchemaVersion] = useState<string>('v1');
+  const schemaVersions = ['v1', 'v2', 'v3'];
+  const schemaLatest = 'v3';
+
+  const [schemaVersion, setSchemaVersion] = useState<string>(schemaLatest);
 
   const [schema, setSchema] = useState<SwaggerSchema>();
   useEffect(() => {
@@ -121,8 +124,8 @@ export default function HomePage() {
                   <Text>API Version</Text>
                   <Select
                     value={schemaVersion}
-                    onChange={(value) => setSchemaVersion(value ?? 'v1')}
-                    data={['v1', 'v2']}
+                    onChange={(value) => setSchemaVersion(value ?? schemaLatest)}
+                    data={schemaVersions}
                   />
                 </Group>
                 <Divider mb={10} />
