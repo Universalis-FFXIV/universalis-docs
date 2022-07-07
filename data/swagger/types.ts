@@ -1,4 +1,4 @@
-export type SwaggerComponentRef = { $ref: string };
+export type SwaggerComponentRef = { $ref?: string };
 
 export type SwaggerValue = {
   description?: string;

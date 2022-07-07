@@ -7,11 +7,11 @@ function nameToId(name: string): string {
   return `schema-${name.toLowerCase()}`;
 }
 
-function refToComponent(ref: string): string {
-  return ref.substring(ref.lastIndexOf('/') + 1);
+function refToComponent(ref?: string): string | undefined {
+  return ref?.substring(ref.lastIndexOf('/') + 1);
 }
 
-function typeToHint(type: SwaggerType): string {
+function typeToHint(type: SwaggerType): string | undefined {
   if (type.type === 'array') {
     return `${typeToHint(type.items)}[]`;
   }
