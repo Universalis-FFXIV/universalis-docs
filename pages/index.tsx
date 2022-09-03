@@ -60,7 +60,7 @@ function HomePageNavButton({
 }
 
 export default function HomePage() {
-  const schemaVersions = ['v1', 'v2', 'v3'];
+  const schemaVersions = ['v1', 'v2'];
   const schemaDefault = 'v2';
 
   const [schemaVersion, setSchemaVersion] = useState<string>(schemaDefault);
