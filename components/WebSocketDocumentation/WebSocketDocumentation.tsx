@@ -31,18 +31,21 @@ export function WebSocketDocumentation({ schema }: { schema?: SwaggerSchema }) {
         Getting started
       </Title>
       <Text mt={16}>
-        To begin with, connect to the WebSocket endpoint and set up BSON deserializtion.
+        To begin, connect to the WebSocket endpoint and set up BSON deserializtion.
       </Text>
       <Prism.Tabs mt={16}>
         <Prism.Tab label="Node" withLineNumbers language="javascript">
-          {`import { deserialize } from "bson";
+          {`import { serialize, deserialize } from "bson";
 import WebSocket from "ws";
 
 const addr = "wss://universalis.app/api/ws";
 
 const ws = new WebSocket(addr);
 
-ws.on("open", () => console.log("Connection opened."));
+ws.on("open", () => {
+  ws.send(serialize({ event: "subscribe", channel: "listings/add" }));
+  console.log("Connection opened.");
+});
 
 ws.on("close", () => console.log("Connection closed."));
 
@@ -50,6 +53,32 @@ ws.on("message", data => {
     const message = deserialize(data);
     console.log(message);
 });`}
+        </Prism.Tab>
+        <Prism.Tab label="Python" withLineNumbers language="python">
+          {`import bson  # pip install pymongo
+import ssl
+import websocket  # pip install websocket-client
+
+
+def on_open(ws):
+    ws.send(bson.encode({"event": "subscribe", "channel": "listings/add"}))
+    print("Connection opened. Ready to retrieve data.")
+
+
+def on_close():
+    print("Connection was closed.")
+
+
+def on_message(ws, message):
+    print(bson.decode(message))
+
+
+def on_error(ws, err):
+    print("Error: ", err)
+
+
+ws = websocket.WebSocketApp("wss://universalis.app/api/ws", on_open=on_open, on_close=on_close, on_message=on_message, on_error=on_error)
+ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})`}
         </Prism.Tab>
       </Prism.Tabs>
       <Text mt={16}>
@@ -83,9 +112,18 @@ ws.on("message", data => {
 // ...
 
 ws.on("open", () => {
-    console.log("Connection opened.");
-    ws.send(serialize({ event: "subscribe", channel: "listings/add" }));
+  ws.send(serialize({ event: "subscribe", channel: "listings/add" }));
+  console.log("Connection opened.");
 });`}
+        </Prism.Tab>
+        <Prism.Tab label="Python" withLineNumbers language="python">
+          {`import bson
+
+# ...
+
+def on_open(ws):
+    ws.send(bson.encode({"event": "subscribe", "channel": "listings/add"}))
+    print("Connection opened. Ready to retrieve data.")`}
         </Prism.Tab>
       </Prism.Tabs>
       <Text mt={16}>
@@ -93,23 +131,28 @@ ws.on("open", () => {
         server. Keep an eye on your application&apos;s memory usage; you may be receiving messages
         faster than your application is processing them.
       </Text>
-      <Text mt={16}>Unsubscribing from an event channel works similarly:</Text>
+      <Text mt={16}>Unsubscribing from an event channel works in a similar manner:</Text>
       <Prism.Tabs mt={16}>
         <Prism.Tab label="Node" withLineNumbers language="javascript">
           {'ws.send(serialize({ event: "unsubscribe", channel: "listings/add" }));'}
         </Prism.Tab>
+        <Prism.Tab label="Python" withLineNumbers language="python">
+          {'ws.send(bson.encode({"event": "unsubscribe", "channel": "listings/add"}))'}
+        </Prism.Tab>
       </Prism.Tabs>
       <Text mt={16}>
-        Events can be filtered on the server by appending a filter string to your{' '}
-        <Code>subscribe</Code> request. Filter strings are comma-separated lists of fields that
-        should be matched on sent messages. For example, messages on the <Code>listings/add</Code>{' '}
-        channel have a <Code>world</Code> field, containing the world ID of the listing upload data.
-        Adding <Code>{'{world=73}'}</Code> to the event channel will filter uploads to Adamantoise
-        only:
+        Events can be filtered by appending a filter string to your <Code>subscribe</Code> request.
+        Filter strings are comma-separated lists of fields that should be matched on sent messages.
+        For example, messages on the <Code>listings/add</Code> channel have a <Code>world</Code>{' '}
+        field, containing the world ID of the listing upload data. Adding{' '}
+        <Code>{'{world=73}'}</Code> to the event channel will filter uploads to Adamantoise only:
       </Text>
       <Prism.Tabs mt={16}>
         <Prism.Tab label="Node" withLineNumbers language="javascript">
           {'ws.send(serialize({ event: "subscribe", channel: "listings/add{world=73}" }));'}
+        </Prism.Tab>
+        <Prism.Tab label="Python" withLineNumbers language="python">
+          {'ws.send(bson.encode({"event": "subscribe", "channel": "listings/add{world=73}"}))'}
         </Prism.Tab>
       </Prism.Tabs>
       <Text mt={16}>
@@ -121,6 +164,10 @@ ws.on("open", () => {
           {`ws.send(serialize({ event: "subscribe", channel: "listings/add{world=73}" }));
 ws.send(serialize({ event: "subscribe", channel: "listings/add{world=63}" }));`}
         </Prism.Tab>
+        <Prism.Tab label="Python" withLineNumbers language="python">
+          {`ws.send(bson.encode({"event": "subscribe", "channel": "listings/add{world=73}"}))
+ws.send(bson.encode({"event": "subscribe", "channel": "listings/add{world=63}"}))`}
+        </Prism.Tab>
       </Prism.Tabs>
       <Text mt={16}>
         Feel free to experiment with other combinations of channels and filters to refine the data
@@ -128,20 +175,20 @@ ws.send(serialize({ event: "subscribe", channel: "listings/add{world=63}" }));`}
         game regions, so you probably won&apos;t want to listen on any channel without any filters
         at all.
       </Text>
-        <Title id="bson-formatting" mt={32}>
-            BSON Data Format
-        </Title>
-        <Text mt={16}>
-            All data sent over the websocket is formatted via BSON, same as the subscribe requests,
-            and will need to be passed through a BSON decoder/parser in order to be used in your
-            application, please make sure to review the comments as some fields can be NULL or
-            not included in some requests. Converting this for your specific language will require
-            review of your languages BSON parser, as there may be case sensitivity issues.  The
-            following is a JSON representation for your convenience.
-        </Text>
-        <Prism.Tabs mt={16}>
-            <Prism.Tab label="Node" language="json">
-                {`{
+      <Title id="bson-formatting" mt={32}>
+        BSON Data Format
+      </Title>
+      <Text mt={16}>
+        All data sent over the websocket is formatted via BSON, same as the subscribe requests, and
+        will need to be passed through a BSON decoder/parser in order to be used in your
+        application, please make sure to review the comments as some fields can be NULL or not
+        included in some requests. Converting this for your specific language will require review of
+        your languages BSON parser, as there may be case sensitivity issues. The following is a JSON
+        representation for your convenience.
+      </Text>
+      <Prism.Tabs mt={16}>
+        <Prism.Tab label="Node" language="json">
+          {`{
   /* This corresponds to the subscribe information */
   "event": "listings/add",
   /* Item ID being sent in this message */
@@ -201,8 +248,8 @@ ws.send(serialize({ event: "subscribe", channel: "listings/add{world=63}" }));`}
     }
   ]
 }`}
-            </Prism.Tab>
-        </Prism.Tabs>
+        </Prism.Tab>
+      </Prism.Tabs>
       <Space mt={200} />
     </Container>
   );
