@@ -20,7 +20,7 @@ export function RestWelcome() {
           this sheet
         </Anchor>
         , or{' '}
-        <Anchor href="https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/master/apps/client/src/assets/data/items.json">
+        <Anchor href="https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/master/libs/data/src/lib/json/items.json">
           this
         </Anchor>{' '}
         pre-made dump.
