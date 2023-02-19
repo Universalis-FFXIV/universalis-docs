@@ -1,5 +1,4 @@
-import { Box, List, Text } from '@mantine/core';
-import Link from 'next/link';
+import { Anchor, Box, List, Text } from '@mantine/core';
 import { SwaggerSchema } from '../../data/swagger/types';
 
 function nameToId(name: string): string {
@@ -43,7 +42,7 @@ export function RestTableOfContents({ schema }: { schema: SwaggerSchema }) {
       <List type="ordered">
         {endpointHeaders.map((h, i) => (
           <List.Item key={`toc${h}`}>
-            <Link href={`#${endpointIds[i]}`}>{h}</Link>
+            <Anchor href={`#${endpointIds[i]}`}>{h}</Anchor>
           </List.Item>
         ))}
       </List>
@@ -51,7 +50,7 @@ export function RestTableOfContents({ schema }: { schema: SwaggerSchema }) {
       <List type="ordered">
         {componentHeaders.map((h, i) => (
           <List.Item key={`toc${h}`}>
-            <Link href={`#${componentIds[i]}`}>{h}</Link>
+            <Anchor href={`#${componentIds[i]}`}>{h}</Anchor>
           </List.Item>
         ))}
       </List>
