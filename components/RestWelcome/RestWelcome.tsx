@@ -16,7 +16,7 @@ export function RestWelcome() {
         <Anchor href="https://xivapi.com/docs/Search#search">XIVAPI</Anchor>. In addition to XIVAPI,
         you can also get item ID mappings from{' '}
         <Anchor href="https://lumina.xiv.dev/docs/intro.html">Lumina</Anchor>,{' '}
-        <Anchor href="https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Item.csv">
+        <Anchor href="https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/en/Item.csv">
           this sheet
         </Anchor>
         , or{' '}
@@ -29,7 +29,7 @@ export function RestWelcome() {
       <Text>
         To get a mapping of world IDs to world names, use{' '}
         <Anchor href="https://xivapi.com/World">XIVAPI</Anchor> or{' '}
-        <Anchor href="https://github.com/xivapi/ffxiv-datamining/blob/master/csv/World.csv">
+        <Anchor href="https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/en/World.csv">
           this sheet
         </Anchor>
         . The <Code>key</Code> column represents the world ID, and the <Code>Name</Code> column
